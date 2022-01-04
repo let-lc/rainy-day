@@ -1,46 +1,51 @@
 <script lang="ts">
-	import Header from '$lib/header/Header.svelte';
-	import '../app.css';
+  import 'tailwindcss/tailwind.css';
+  import { RainingBackground } from '$lib/components';
 </script>
 
-<Header>
-	<main>
-		<slot />
-	</main>
+<main class="relative w-screen h-screen overflow-hidden">
+  <slot />
+</main>
+<RainingBackground />
 
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
+<style global lang="scss">
+  a,
+  button {
+    @apply focus:outline-none;
+  }
 
-	<style>
-		main {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			padding: 1rem;
-			width: 100%;
-			max-width: 1024px;
-			margin: 0 auto;
-			box-sizing: border-box;
-		}
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255, 255, 255) rgba(0, 0, 0, 0.375);
+  }
 
-		footer {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			padding: 40px;
-		}
+  /* webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-		footer a {
-			font-weight: bold;
-		}
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.375);
+    border-radius: 4px;
+  }
 
-		@media (min-width: 480px) {
-			footer {
-				padding: 40px 0;
-			}
-		}
-	</style>
-</Header>
-<slot />
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(255, 255, 255);
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(255, 255, 255, 0.75);
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: rgb(255, 255, 255, 0.5);
+    background-clip: content-box;
+  }
+</style>
