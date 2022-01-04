@@ -1,7 +1,7 @@
 <p align="center">
   <img src="./static/favicon.png" width="128px">
    <br/>
-  <a href="https://rain.haku.dev" align="center">Rainy Day</a>
+  <a href="https://rainy.haku.dev" align="center">Rainy Day</a>
 <p align="center">A cloudy day, turn on my Lo-fi playlist, a cup of hot coffee. Now I just need some rain.</p>
 </p>
 
