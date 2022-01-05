@@ -1,16 +1,16 @@
 <script lang="ts">
-  import axios from 'axios';
-  import { currentSong } from '$lib/stores';
+  import { currentSong, nextSong } from '$lib/stores';
+  import { getAudio } from '$lib/api';
 
   export let result: SearchResult;
   let loading: boolean = false;
 
   const loadAudio = () => {
     loading = true;
-    axios
-      .get('/api/audio', { params: { v: result?.url || '' } })
+    getAudio(result?.url)
       .then(({ data }) => {
         currentSong.set({ ...data.current });
+        nextSong.set({ ...data.next });
         loading = false;
       })
       .catch((err) => {
@@ -62,11 +62,7 @@
       {/if}
     </div>
 
-    <img
-      src={result.thumbnail}
-      alt="Thumbnail"
-      class="object-cover w-48 select-none h-28"
-    />
+    <img src={result.thumbnail} alt="Thumbnail" class="object-cover w-48 select-none h-28" />
   </button>
   <div class="flex flex-col justify-between">
     <div>
