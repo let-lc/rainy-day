@@ -74,6 +74,24 @@
             </svg>
           </button>
         </div>
+        <!-- Links -->
+        {#if !results.length && !loading}
+          <div class="fixed bottom-2 text-xs text-center">
+            {#if typeof window !== 'undefined' && !window?.['chrome']}
+              <p class="text-white/75">⚠️ Use chromium for the best visual effect.</p>
+            {/if}
+            <p class="text-white/75">
+              This project is for study purpose only. <a
+                href="https://github.com/let-lc/rainy-day"
+                target="_blank"
+                rel="noreferrer"
+                class="font-mono text-white/50 hover:text-white hover:underline"
+              >
+                {'<GitHub />'}
+              </a>
+            </p>
+          </div>
+        {/if}
       </div>
       {#if loading}
         <div class="flex-grow w-full h-0 max-w-5xl overflow-y-auto backdrop-blur bg-white/10">
