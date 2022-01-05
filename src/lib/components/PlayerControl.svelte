@@ -1,13 +1,16 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import { linear } from 'svelte/easing';
-  import { formatTime } from '$lib/utils';
+
+  import { getAudio } from '$lib/api';
+  import { formatTime, getPreviousVideoUrl, updatePlayHistory } from '$lib/utils';
   import {
     currentSong,
     changeCurrentTime,
     currentTime,
     duration,
     loopOne,
+    nextSong,
     playing,
     prevVolume,
     volume,
@@ -59,6 +62,39 @@
     playing.set(true);
   };
 
+  /**
+   * Play previous video.
+   */
+  const playPrevHandler = () => {
+    const prevUrl = getPreviousVideoUrl();
+    if (prevUrl) {
+      getAudio(prevUrl)
+        .then(({ data }) => {
+          currentSong.set({ ...data.current });
+          nextSong.set({ ...data.next });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+
+  /**
+   * Play next video.
+   */
+  const playNextHandler = () => {
+    if ($nextSong.videoUrl) {
+      getAudio($nextSong.videoUrl)
+        .then(({ data }) => {
+          updatePlayHistory($currentSong);
+          currentSong.set({ ...data.current });
+          nextSong.set({ ...data.next });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
 
   /**
    * Switch looping one or not.
@@ -149,7 +185,7 @@
       <!-- Play/Pause, Prev/Next -->
       <div class="flex justify-center">
         <div class="flex items-center gap-x-2">
-          <button class="group">
+          <button class="group" on:click={playPrevHandler}>
             <!-- Google Material Icons: round-skip-previous -->
             <svg
               class="w-10 h-10 text-white transition-opacity duration-150 group-hover:opacity-60"
@@ -190,7 +226,7 @@
               </svg>
             {/if}
           </button>
-          <button class="group">
+          <button class="group" on:click={playNextHandler}>
             <!-- Google Material Icons: round-skip-next -->
             <svg
               class="w-10 h-10 text-white transition-opacity duration-150 group-hover:opacity-60"

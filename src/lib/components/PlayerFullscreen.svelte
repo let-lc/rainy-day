@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { slide } from 'svelte/transition';
-  import { linear } from 'svelte/easing';
-  import { formatTime } from '$lib/utils';
+  import { formatTime, getPreviousVideoUrl, updatePlayHistory } from '$lib/utils';
   import {
     currentSong,
     changeCurrentTime,
@@ -12,7 +10,9 @@
     prevVolume,
     volume,
     fullScreen,
+    nextSong,
   } from '$lib/stores';
+  import { getAudio } from '$lib/api';
 
   // Prevent unnecessary transition when dragging the progress bar.
   let dragging: boolean = false;
@@ -62,6 +62,40 @@
   const pauseHandler = () => {
     dragging = false;
     playing.set(true);
+  };
+
+  /**
+   * Play previous video.
+   */
+  const playPrevHandler = () => {
+    const prevUrl = getPreviousVideoUrl();
+    if (prevUrl) {
+      getAudio(prevUrl)
+        .then(({ data }) => {
+          currentSong.set({ ...data.current });
+          nextSong.set({ ...data.next });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+
+  /**
+   * Play next video.
+   */
+  const playNextHandler = () => {
+    if ($nextSong.videoUrl) {
+      getAudio($nextSong.videoUrl)
+        .then(({ data }) => {
+          updatePlayHistory($currentSong);
+          currentSong.set({ ...data.current });
+          nextSong.set({ ...data.next });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
   };
 
   /**
@@ -175,8 +209,8 @@
         </div>
         <!-- Prev/Next -->
         <div class="flex justify-between">
-          <div class="grid grid-cols-3 gap-x-1">
-            <button class="group">
+          <div class="flex items-center gap-x-1">
+            <button class="group" on:click={playPrevHandler}>
               <!-- Google Material Icons: round-skip-previous -->
               <svg
                 class="w-6 h-6 text-white transition-opacity duration-150 group-hover:opacity-60"
@@ -188,7 +222,7 @@
                 />
               </svg>
             </button>
-            <button class="group">
+            <button class="group" on:click={playNextHandler}>
               <!-- Google Material Icons: round-skip-next -->
               <svg
                 class="w-6 h-6 text-white transition-opacity duration-150 group-hover:opacity-60"

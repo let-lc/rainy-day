@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
+  import { getAudio } from '$lib/api';
   import { PlayerLayout } from '$lib/components';
+  import { updatePlayHistory } from '$lib/utils';
   import {
     currentSong,
     changeCurrentTime,
@@ -9,6 +11,7 @@
     duration,
     loopOne,
     playing,
+    nextSong,
     volume,
   } from '$lib/stores';
 
@@ -50,7 +53,21 @@
   };
 
   /**
-   * Play/Pause handler.
+   * Play next suggest song when the song ends.
+   */
+  const audioEndHandler = () => {
+    if (!$loopOne && $nextSong.videoUrl) {
+      getAudio($nextSong.videoUrl)
+        .then(({ data }) => {
+          updatePlayHistory($currentSong);
+          currentSong.set({ ...data.current });
+          nextSong.set({ ...data.next });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
 
   /**
    * Sync play/pause state to audio element.
@@ -88,5 +105,6 @@
   src={$currentSong.audioSrcUrl}
   on:timeupdate={timeUpdateHandler}
   on:loadedmetadata={loadMetadataHandler}
+  on:ended={audioEndHandler}
 />
 <PlayerLayout />

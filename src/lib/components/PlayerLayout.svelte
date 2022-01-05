@@ -1,6 +1,9 @@
 <script lang="ts">
-  import axios, { AxiosError } from 'axios';
+  import type { AxiosError } from 'axios';
+
+  import { searchVideo } from '$lib/api';
   import { fullScreen } from '$lib/stores';
+
   import Logo from './Logo.svelte';
   import PlayerControl from './PlayerControl.svelte';
   import PlayerFullscreen from './PlayerFullscreen.svelte';
@@ -14,8 +17,7 @@
   const search = () => {
     if (!searchStr) return;
     loading = true;
-    axios
-      .get('/api/search', { params: { q: searchStr } })
+    searchVideo(searchStr)
       .then((res) => {
         loading = false;
         results = res.data?.results || [];
