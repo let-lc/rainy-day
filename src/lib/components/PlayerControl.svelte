@@ -7,6 +7,7 @@
     changeCurrentTime,
     currentTime,
     duration,
+    loopOne,
     playing,
     prevVolume,
     volume,
@@ -58,6 +59,17 @@
     playing.set(true);
   };
 
+
+  /**
+   * Switch looping one or not.
+   */
+  const loopHandler = () => {
+    loopOne.update((p) => !p);
+  };
+
+  /**
+   * Switch to fullscreen.
+   */
   const fullscreenHandler = () => {
     fullScreen.set(true);
   };
@@ -188,6 +200,25 @@
               <path
                 d="M7.58 16.89l5.77-4.07c.56-.4.56-1.24 0-1.63L7.58 7.11C6.91 6.65 6 7.12 6 7.93v8.14c0 .81.91 1.28 1.58.82zM16 7v10c0 .55.45 1 1 1s1-.45 1-1V7c0-.55-.45-1-1-1s-1 .45-1 1z"
               />
+            </svg>
+          </button>
+          <button
+            on:click={loopHandler}
+            title={$loopOne ? 'Loop One' : 'Loop disabled'}
+            class="p-px rounded-full group {$loopOne
+              ? 'bg-white/90 shadow shadow-white/40'
+              : 'bg-transparent'}"
+          >
+            <svg class="w-4 h-4 {$loopOne ? 'text-gray-700' : 'text-white/40'}" viewBox="0 0 16 16">
+              <g fill="currentColor">
+                <path
+                  d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182a.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                />
+              </g>
             </svg>
           </button>
         </div>

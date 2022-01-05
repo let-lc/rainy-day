@@ -5,6 +5,7 @@
     changeCurrentTime,
     currentTime,
     duration,
+    loopOne,
     playing,
     volume,
   } from '$lib/stores';
@@ -57,6 +58,7 @@
 
 <audio
   autoplay={true}
+  loop={$loopOne}
   bind:this={aduioElement}
   src={$currentSong.audioSrcUrl}
   on:timeupdate={timeUpdateHandler}
