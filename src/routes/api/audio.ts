@@ -27,7 +27,7 @@ export const get: RequestHandler = async ({ query }) => {
         next: {
           thumbnail:
             info.related_videos[0].thumbnails[info.related_videos[0].thumbnails.length - 1].url,
-          videoId: info.related_videos[0].id,
+          videoUrl: 'https://www.youtube.com/watch?v=' + info.related_videos[0].id,
           title: info.related_videos[0].title,
           channel:
             typeof info.related_videos[0].author === 'string'
