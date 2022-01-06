@@ -3,7 +3,7 @@
 
   import { getAudio } from '$lib/api';
   import { PlayerLayout } from '$lib/components';
-  import { updatePlayHistory } from '$lib/utils';
+  import { getPreviousVideoUrl, updatePlayHistory } from '$lib/utils';
   import {
     currentSong,
     changeCurrentTime,
@@ -24,6 +24,51 @@
   $: updateMediaSession($currentSong);
 
   onMount(() => {
+    initVol();
+    initMediaKeys();
+  });
+
+  /**
+   * Set up media session handlers.
+   */
+  const initMediaKeys = () => {
+    if (typeof navigator !== 'undefined' && navigator?.mediaSession) {
+      navigator.mediaSession.setActionHandler('play', () => playing.set(true));
+      navigator.mediaSession.setActionHandler('pause', () => playing.set(false));
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        const prevUrl = getPreviousVideoUrl();
+        if (prevUrl) {
+          getAudio(prevUrl)
+            .then(({ data }) => {
+              currentSong.set({ ...data.current });
+              nextSong.set({ ...data.next });
+            })
+            .catch((err) => {
+              console.error(err.message);
+            });
+        }
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        if ($nextSong.videoUrl) {
+          getAudio($nextSong.videoUrl)
+            .then(({ data }) => {
+              updatePlayHistory($currentSong);
+              currentSong.set({ ...data.current });
+              nextSong.set({ ...data.next });
+            })
+            .catch((err) => {
+              console.error(err.message);
+            });
+        }
+      });
+    }
+  };
+
+  /**
+   * Initialize volume state, sync from local stroage if exists, and subscribe
+   * the volume state to local storage.
+   */
+  const initVol = () => {
     if (typeof localStorage !== 'undefined') {
       const vol = Number(localStorage.getItem('vol') ?? NaN);
       volume.set(!isNaN(vol) && vol <= 1 ? vol : 0.5);
@@ -32,7 +77,7 @@
         localStorage.vol = String(value);
       });
     }
-  });
+  };
 
   /**
    * Update current time state on time update of the audio element.
