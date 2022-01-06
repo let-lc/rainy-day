@@ -21,6 +21,7 @@
   $: setPlayingHandler($playing);
   $: setVolumeHandler($volume);
   $: setCurrentTimeHandler($changeCurrentTime);
+  $: updateMediaSession($currentSong);
 
   onMount(() => {
     if (typeof localStorage !== 'undefined') {
@@ -91,6 +92,21 @@
    */
   const setCurrentTimeHandler = (newCurrentTime: number) => {
     if (aduioElement) aduioElement.currentTime = newCurrentTime;
+  };
+
+  /**
+   * Sync current song metadata to media session metadata.
+   *
+   * @param currentSong current song object.
+   */
+  const updateMediaSession = (currentSong: CurrentSong) => {
+    if (typeof navigator !== 'undefined' && navigator?.mediaSession) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentSong.title,
+        artist: currentSong.channel,
+        artwork: [{ src: currentSong.thumbnail }],
+      });
+    }
   };
 </script>
 
