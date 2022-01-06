@@ -76,7 +76,7 @@
           nextSong.set({ ...data.next });
         })
         .catch((err) => {
-          console.log(err.message);
+          console.error(err.message);
         });
     }
   };
@@ -93,7 +93,7 @@
           nextSong.set({ ...data.next });
         })
         .catch((err) => {
-          console.log(err.message);
+          console.error(err.message);
         });
     }
   };
