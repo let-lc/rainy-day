@@ -24,7 +24,7 @@
       })
       .catch((err: AxiosError) => {
         loading = false;
-        console.log(err.response.data || err.message);
+        console.error(err.response.data || err.message);
       });
   };
 
