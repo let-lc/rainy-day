@@ -112,8 +112,106 @@
 </script>
 
 {#if $currentSong.audioSrcUrl}
+  <!-- Mobile Version -->
   <div
-    class="grid -space-y-1.5 transition-all duration-1000"
+    class="fixed grid py-2 pl-2 pr-4 space-x-0 rounded sm:space-x-2 gap-y-2 bg-black/75 backdrop-blur inset-x-2 bottom-4 sm:hidden gap-x-2 z-20"
+  >
+    <div class="flex">
+      <div class="relative flex items-center flex-grow space-x-2">
+        <button
+          class="relative flex-shrink-0 transition-shadow duration-150 shadow-xl hover:shadow-white/100"
+          on:click={fullscreenHandler}
+        >
+          <img
+            src={$currentSong.thumbnail}
+            alt="Thumbnails"
+            class="object-cover w-12 h-12 rounded select-none"
+          />
+        </button>
+        <div class="grid text-white h-11">
+          <a
+            class="text-sm font-medium truncate whitespace-nowrap hover:underline"
+            href={$currentSong.videoUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {$currentSong.title}
+          </a>
+          <a
+            class="w-5/6 text-xs truncate hover:underline"
+            href={$currentSong.channelUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {$currentSong.channel}
+          </a>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <div class="flex items-center space-x-2">
+          <button class="group" on:click={playPrevHandler}>
+            <!-- Google Material Icons: round-skip-previous -->
+            <svg
+              class="w-10 h-10 text-white transition-opacity duration-150 group-hover:opacity-60"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M7 6c.55 0 1 .45 1 1v10c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55.45-1 1-1zm3.66 6.82l5.77 4.07c.66.47 1.58-.01 1.58-.82V7.93c0-.81-.91-1.28-1.58-.82l-5.77 4.07a1 1 0 0 0 0 1.64z"
+              />
+            </svg>
+          </button>
+          <button class="group" on:click={playPauseHandler}>
+            {#if $playing}
+              <!-- herocions/solid: pause -->
+              <svg
+                class="w-12 h-12 text-white transition-opacity duration-150 group-hover:opacity-60"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            {:else}
+              <!-- herocions/solid: play -->
+              <svg
+                class="w-12 h-12 text-white transition-opacity duration-150 group-hover:opacity-60"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            {/if}
+          </button>
+          <button class="group" on:click={playNextHandler}>
+            <!-- Google Material Icons: round-skip-next -->
+            <svg
+              class="w-10 h-10 text-white transition-opacity duration-150 group-hover:opacity-60"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M7.58 16.89l5.77-4.07c.56-.4.56-1.24 0-1.63L7.58 7.11C6.91 6.65 6 7.12 6 7.93v8.14c0 .81.91 1.28 1.58.82zM16 7v10c0 .55.45 1 1 1s1-.45 1-1V7c0-.55-.45-1-1-1s-1 .45-1 1z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-sm bg-white/25 h-0.5 w-full overflow-hidden">
+      <div style="width: {($currentTime / $duration) * 100}%;" class="h-full bg-gradient-to-r from-green-400 to-blue-500" />
+    </div>
+  </div>
+  <!-- Desktop Version -->
+  <div
+    class="sm:grid -space-y-1.5 transition-all duration-1000 hidden"
     in:slide={{ duration: 300, easing: linear }}
   >
     <div class="relative z-10">
@@ -138,9 +236,11 @@
         </div>
       {/if}
     </div>
-    <div class="grid w-full h-16 grid-cols-3 px-24 shadow bg-white/10 backdrop-blur shadow-white">
+    <div
+      class="grid w-full h-16 grid-cols-3 px-4 shadow md:px-24 bg-white/10 backdrop-blur shadow-white"
+    >
       <!-- Video Information -->
-      <div class="relative flex items-center gap-x-4">
+      <div class="relative flex items-center space-x-4">
         <button
           class="relative flex-shrink-0 transition-shadow duration-150 shadow-xl group hover:shadow-white/100"
           on:click={fullscreenHandler}
@@ -163,7 +263,7 @@
             class="object-cover w-12 h-12 rounded select-none"
           />
         </button>
-        <div class="grid h-11 py-0.5 text-white">
+        <div class="grid text-white h-11">
           <a
             class="font-medium truncate whitespace-nowrap hover:underline"
             href={$currentSong.videoUrl}
@@ -173,7 +273,7 @@
             {$currentSong.title}
           </a>
           <a
-            class="text-xs hover:underline w-max"
+            class="w-11/12 text-xs truncate hover:underline"
             href={$currentSong.channelUrl}
             target="_blank"
             rel="noreferrer"
@@ -184,7 +284,7 @@
       </div>
       <!-- Play/Pause, Prev/Next -->
       <div class="flex justify-center">
-        <div class="flex items-center gap-x-2">
+        <div class="flex items-center space-x-2">
           <button class="group" on:click={playPrevHandler}>
             <!-- Google Material Icons: round-skip-previous -->
             <svg
@@ -260,7 +360,7 @@
         </div>
       </div>
       <!-- Volume Control -->
-      <div class="flex items-center justify-end gap-x-2">
+      <div class="flex items-center justify-end space-x-2">
         <input
           type="range"
           class="volume"

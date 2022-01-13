@@ -36,8 +36,9 @@
   /**
    * Switch play/pause.
    */
-  const playPauseHandler = () => {
+  const playPauseHandler: svelte.JSX.MouseEventHandler<HTMLButtonElement> = (e) => {
     playing.update((p) => !p);
+    e.currentTarget.blur();
   };
 
   /**
@@ -106,16 +107,16 @@
   };
 </script>
 
-<div class="flex items-center justify-center w-screen h-screen">
+<div class="flex items-center justify-center w-screen h-screen p-4">
   <div
-    class="relative grid w-full max-w-5xl grid-cols-1 p-8 overflow-hidden rounded-md shadow-xl bg-white/10 backdrop-blur shadow-white/5"
+    class="relative flex flex-col justify-between w-full h-full max-w-5xl px-8 pt-16 pb-8 overflow-hidden rounded-md shadow-xl sm:justify-start sm:p-8 sm:h-auto bg-white/10 backdrop-blur shadow-white/5"
   >
     <button
-      class="absolute top-0 right-0 transition-all duration-150 bg-white bg-opacity-0 rounded-bl-lg outline-none text-white/50 hover:text-white hover:bg-opacity-50"
+      class="absolute transition-all duration-150 bg-white bg-opacity-0 rounded-bl-lg outline-none top-2 sm:top-0 right-2 sm:right-0 text-white/50 hover:text-white hover:bg-opacity-50"
       on:click={() => fullScreen.set(false)}
     >
       <!-- heroicons/solid: chevron-down -->
-      <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+      <svg class="w-10 h-10 sm:w-5 sm:h-5" viewBox="0 0 20 20" fill="currentColor">
         <path
           fill-rule="evenodd"
           d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -123,14 +124,19 @@
         />
       </svg>
     </button>
-    <div class="flex gap-x-4">
+    <div
+      class="flex flex-col flex-grow space-x-0 sm:space-x-4 sm:flex-row sm:rounded-none sm:flex-grow-0"
+    >
       <div
-        class="relative h-48 transition-all duration-700 flex-shrink-0 {$playing !== dragging
-          ? 'w-[19rem]'
-          : 'w-48'}"
+        class="relative aspect-square sm:aspect-auto transition-all duration-700 flex-shrink-0 w-full {$playing !==
+        dragging
+          ? 'sm:w-[19rem]'
+          : 'sm:w-48'}"
       >
         <button
-          class="relative z-10 w-48 h-48 overflow-hidden rounded-md shadow outline-none group"
+          class="relative z-10 w-full overflow-hidden shadow outline-none sm:w-48 aspect-square group transition-all h-max duration-300 {$playing
+            ? 'sm:rounded-md rounded-[50%]'
+            : 'rounded-md'}"
           on:click={playPauseHandler}
         >
           <div
@@ -139,7 +145,7 @@
             {#if $playing}
               <!-- Phosphor Icons: play-fill -->
               <svg
-                class="w-12 h-12 text-white transition-opacity duration-200 opacity-0 group-hover:opacity-100"
+                class="w-24 h-24 text-white transition-opacity duration-200 opacity-0 sm:w-12 sm:h-12 group-hover:opacity-100"
                 viewBox="0 0 256 256"
               >
                 <path
@@ -150,7 +156,7 @@
             {:else}
               <!-- Phosphor Icons: pause-fill -->
               <svg
-                class="w-12 h-12 text-white transition-opacity duration-200 opacity-0 group-hover:opacity-100"
+                class="w-24 h-24 text-white transition-opacity duration-200 opacity-0 sm:w-12 sm:h-12 group-hover:opacity-100"
                 viewBox="0 0 256 256"
               >
                 <path
@@ -160,20 +166,33 @@
               </svg>
             {/if}
           </div>
-          <img
-            src="/texture.jpg"
-            alt="Thumbnail"
-            class="absolute inset-0 z-10 object-cover mix-blend-exclusion"
-          />
-          <img
-            src={$currentSong.thumbnail}
-            alt="Thumbnail"
-            class="relative object-cover w-full h-full"
-          />
+          <div class="absolute inset-0 overflow-hidden {$playing ? 'hidden sm:inline' : 'block'}">
+            <img
+              src="/texture.jpg"
+              alt="Thumbnail"
+              class="absolute inset-0 z-10 object-cover mix-blend-screen"
+            />
+            <img src={$currentSong.thumbnail} alt="Thumbnail" class="object-cover w-full h-full" />
+          </div>
+          <div
+            class="bg-black/50 w-full h-full flex items-center justify-center {$playing
+              ? 'block sm:hidden'
+              : 'hidden'}"
+          >
+            <div
+              class="flex items-center justify-center w-11/12 aspect-square rounded-[50%] bg-black/50"
+            >
+              <img
+                src={$currentSong.thumbnail}
+                alt="Thumbnail"
+                class="relative object-cover w-2/5 h-2/5 ring-[2rem] ring-black/50 rounded-[50%] animate-spin-slow"
+              />
+            </div>
+          </div>
         </button>
         <!-- Spinning Vinyl -->
         <div
-          class="absolute top-2 left-2 transition-all duration-700 opacity-0 {$playing !==
+          class="absolute top-2 left-2 transition-all duration-700 opacity-0 hidden sm:block {$playing !==
             dragging && 'translate-x-28 opacity-100'}"
         >
           <div
@@ -187,11 +206,11 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col justify-between flex-grow">
+      <div class="flex flex-col justify-between flex-grow pt-12 sm:pt-0">
         <!-- Video Information -->
         <div class="grid py-0.5 text-white">
           <a
-            class="text-xl font-medium truncate whitespace-normal line-clamp-2 hover:underline"
+            class="text-base font-medium whitespace-normal sm:text-xl line-clamp-2 hover:underline"
             href={$currentSong.videoUrl}
             target="_blank"
             rel="noreferrer"
@@ -199,7 +218,7 @@
             {$currentSong.title}
           </a>
           <a
-            class="hover:underline w-max"
+            class="text-sm font-light truncate hover:underline sm:text-base"
             href={$currentSong.channelUrl}
             target="_blank"
             rel="noreferrer"
@@ -209,11 +228,11 @@
         </div>
         <!-- Prev/Next -->
         <div class="flex justify-between">
-          <div class="flex items-center gap-x-1">
+          <div class="flex items-center space-x-1">
             <button class="group" on:click={playPrevHandler}>
               <!-- Google Material Icons: round-skip-previous -->
               <svg
-                class="w-6 h-6 text-white transition-opacity duration-150 group-hover:opacity-60"
+                class="w-16 h-16 text-white transition-opacity duration-150 sm:w-6 sm:h-6 group-hover:opacity-60"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -225,7 +244,7 @@
             <button class="group" on:click={playNextHandler}>
               <!-- Google Material Icons: round-skip-next -->
               <svg
-                class="w-6 h-6 text-white transition-opacity duration-150 group-hover:opacity-60"
+                class="w-16 h-16 text-white transition-opacity duration-150 sm:w-6 sm:h-6 group-hover:opacity-60"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -242,7 +261,7 @@
                 : 'bg-transparent'}"
             >
               <svg
-                class="w-4 h-4 {$loopOne ? 'text-gray-700' : 'text-white/40'}"
+                class="w-6 h-6 sm:w-4 sm:h-4 {$loopOne ? 'text-gray-700' : 'text-white/40'}"
                 viewBox="0 0 16 16"
               >
                 <g fill="currentColor">
@@ -258,7 +277,7 @@
             </button>
           </div>
           <!-- Volume Control -->
-          <div class="flex items-center justify-end group gap-x-2">
+          <div class="flex items-center justify-end space-x-2 group">
             <input
               type="range"
               class="transition-opacity duration-300 opacity-0 volume group-hover:opacity-100"
@@ -295,9 +314,13 @@
       </div>
     </div>
     <!-- Progress Bar -->
-    <div class="flex flex-col justify-between flex-grow pt-4 text-white">
-      <div class="flex items-center gap-x-2">
-        <span class="text-xs">{formatTime($currentTime)}</span>
+    <div class="flex flex-col justify-between flex-grow-0 sm:flex-grow pt-4 sm:pb-0 pb-16 text-white">
+      <div class="relative flex items-center space-x-0 sm:space-x-2">
+        <span
+          class="absolute left-0 text-xs select-none sm:relative sm:left-auto sm:top-auto top-2"
+        >
+          {formatTime($currentTime)}
+        </span>
         <input
           bind:value={$currentTime}
           type="range"
@@ -309,7 +332,11 @@
           on:change={changeCurrentTimeHandler}
           on:mouseup={pauseHandler}
         />
-        <span class="text-xs">{formatTime($duration)}</span>
+        <span
+          class="absolute right-0 text-xs select-none sm:relative sm:right-auto sm:top-auto top-2"
+        >
+          {formatTime($duration)}
+        </span>
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(255, 255, 255) rgba(0, 0, 0, 0.375);
+    scrollbar-color: rgb(255, 255, 255, 0.5) rgba(0, 0, 0, 0.375);
   }
 
   /* webkit browsers */
@@ -35,7 +35,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255, 0.5);
     background-clip: content-box;
   }
 
