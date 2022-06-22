@@ -56,10 +56,8 @@
           <div
             class="w-full max-w-lg p-1 border rounded shadow-xl bg-white/10 backdrop-blur shadow-white/10 border-white/10"
           >
-            <!-- svelte-ignore a11y-autofocus -->
             <input
               type="search"
-              autofocus={true}
               bind:value={searchStr}
               on:keypress={searchOnEnter}
               placeholder="Search videos..."
