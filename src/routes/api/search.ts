@@ -1,8 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import ytsr, { Video } from 'ytsr';
 
-export const get: RequestHandler = async ({ query, host }) => {
-  const q = query.get('q');
+export const get: RequestHandler = async ({ url: { searchParams } }) => {
+  const q = searchParams.get('q');
 
   if (!q) {
     return {
