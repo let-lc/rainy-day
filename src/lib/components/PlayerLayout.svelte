@@ -81,8 +81,9 @@
         <!-- Links -->
         {#if !results.length && !loading}
           <div class="fixed text-xs text-center bottom-2">
-            {#if typeof window !== 'undefined' && !window?.['chrome']}
-              <p class="text-white/75">⚠️ Use chromium for the best visual effect.</p>
+            <!-- svelte-ignore missing-declaration -->
+            {#if typeof window !== 'undefined' && typeof CSS !== 'undefined' && !CSS.supports('backdrop-filter', 'blur(10px)')}
+              <p class="text-white/75">⚠️ This browser doesn't support backdrop blur effect.</p>
             {/if}
             <p class="text-white/75">
               This project is for study purpose only. <a
