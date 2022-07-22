@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import ytsr, { Video } from 'ytsr';
 
-export const get: RequestHandler = async ({ url: { searchParams } }) => {
+export const GET: RequestHandler = async ({ url: { searchParams } }) => {
   const q = searchParams.get('q');
 
   if (!q) {

@@ -1,7 +1,7 @@
 import ytdl from 'ytdl-core';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler = async ({ url: { searchParams } }) => {
+export const GET: RequestHandler = async ({ url: { searchParams } }) => {
   const v = searchParams.get('v');
 
   if (!v) return { status: 400, body: 'Bad Request' };
