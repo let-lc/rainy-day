@@ -8,7 +8,7 @@
 </main>
 <RainingBackground />
 
-<style global lang="scss">
+<style global lang="postcss">
   a,
   button {
     @apply focus:outline-none;
